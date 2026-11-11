@@ -1,0 +1,63 @@
+name: Publish signed Windows update
+on:
+  push:
+    paths: ['desktop/incoming/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: windows-public-update
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify pinned Ed25519 signature and MSI integrity
+        run: |
+          python3 - <<'PY'
+          import base64,hashlib,json,os,pathlib,re,subprocess,zipfile
+          root=pathlib.Path('desktop'); incoming=root/'incoming'
+          info=json.loads((incoming/'latest-windows.json').read_text())
+          version=info['versionName']; assert re.fullmatch(r'\d+\.\d+\.\d+',version)
+          assert isinstance(info['versionCode'],int) and info['versionCode']>0
+          assert info['msiUrl']==f'https://github.com/Jlapb-code/financial-companion-updates/releases/download/windows-v{version}/financial-companion-windows-x64.msi'
+          msi=incoming/'financial-companion-windows-x64.msi'
+          assert msi.stat().st_size==info['size'] and 0<info['size']<250_000_000
+          assert hashlib.file_digest(msi.open('rb'),'sha256').hexdigest()==info['sha256']
+          assert msi.open('rb').read(8)==bytes.fromhex('d0cf11e0a1b11ae1'),'Expected Windows MSI compound file'
+          material='\n'.join(str(info[k]) for k in ('versionCode','versionName','msiUrl','sha256','size','releaseNotes')).encode('utf-8')
+          temp=pathlib.Path(os.environ['RUNNER_TEMP']); (temp/'material').write_bytes(material)
+          (temp/'signature').write_bytes(base64.b64decode(info['signature'],validate=True))
+          subprocess.run(['openssl','pkeyutl','-verify','-pubin','-inkey',str(root/'update-public-key.der'),'-keyform','DER','-rawin','-in',str(temp/'material'),'-sigfile',str(temp/'signature')],check=True)
+          portable=incoming/'financial-companion-windows-x64-portable.zip'
+          with zipfile.ZipFile(portable) as archive:
+              names=set(archive.namelist())
+              assert 'FinancialCompanion/FinancialCompanion.exe' in names
+              assert 'FinancialCompanion/app/desktop.jar' in names
+              assert 'FinancialCompanion/runtime/bin/server/jvm.dll' in names
+              assert archive.testzip() is None
+          (incoming/'SHA256SUMS.txt').write_text(''.join(hashlib.file_digest(p.open('rb'),'sha256').hexdigest()+'  '+p.name+'\n' for p in (msi,portable)),encoding='utf-8')
+          pathlib.Path('windows-release-notes.txt').write_text(info['releaseNotes']+'\n\nWindows 10/11 x64. Java включена. MSI — обычная установка; portable ZIP — запуск FinancialCompanion.exe после распаковки. Канал Windows отделён от Android.\n',encoding='utf-8')
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('WINDOWS_TAG=windows-v'+version+'\n')
+          PY
+      - name: Publish Windows assets without changing Android latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$WINDOWS_TAG" >/dev/null 2>&1; then
+            gh release download "$WINDOWS_TAG" --pattern financial-companion-windows-x64.msi --dir "$RUNNER_TEMP/existing-windows"
+            cmp "$RUNNER_TEMP/existing-windows/financial-companion-windows-x64.msi" desktop/incoming/financial-companion-windows-x64.msi
+          else
+            gh release create "$WINDOWS_TAG" desktop/incoming/financial-companion-windows-x64.msi desktop/incoming/financial-companion-windows-x64-portable.zip desktop/incoming/latest-windows.json desktop/incoming/SHA256SUMS.txt --title "Финансовый напарник для Windows ${WINDOWS_TAG#windows-v}" --notes-file windows-release-notes.txt --latest=false
+          fi
+      - name: Advance Windows update manifest after assets are available
+        run: |
+          cp desktop/incoming/latest-windows.json desktop/latest-windows.json
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add desktop/latest-windows.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Advance signed Windows update channel $WINDOWS_TAG"
+            git push origin HEAD:main
+          fi

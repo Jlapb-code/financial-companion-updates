@@ -1,6 +1,24 @@
-# Финансовый напарник — обновления Android
+# Финансовый напарник — Android и Windows
 
 **[Скачать последнюю версию APK](https://github.com/Jlapb-code/financial-companion-updates/releases/latest/download/financial-companion.apk)**
+
+**[Скачать Windows 10/11 x64 — MSI](https://github.com/Jlapb-code/financial-companion-updates/releases/download/windows-v1.0.0/financial-companion-windows-x64.msi)**
+
+[Windows без установки — portable ZIP](https://github.com/Jlapb-code/financial-companion-updates/releases/download/windows-v1.0.0/financial-companion-windows-x64-portable.zip).
+Java включена. Архив распаковать полностью, затем запустить `FinancialCompanion.exe`.
+
+На ПК: **Эмулятор банка → тип, сумма, счёт и цель → Предпросмотр → Записать в учёт**.
+Доступны пополнение, покупка, зарплата, входящий/исходящий и свой перевод,
+перевод в цель/из цели, возврат, комиссия и кредитный платёж. Можно показать
+системное тестовое оповещение без записи операции. Реальных переводов в банк нет.
+
+Windows проверяет свой канал при запуске; вручную — в настройках.
+Сведения об обновлении подписаны Ed25519, установщик проверяется по размеру и SHA-256.
+Установка MSI требует подтверждения. Сертификат Authenticode не выпускался,
+поэтому Windows может показать неизвестного издателя. Данные зашифрованы
+AES-GCM с ключом DPAPI и сохраняются в `%LOCALAPPDATA%/FinancialCompanion/data`.
+Шифрованные копии `.fnbk` совместимы с Android. Автоматической синхронизации нет.
+Канал Windows: `desktop/latest-windows.json`; теги `windows-v...` отделены от Android.
 
 [Все выпуски и описание версии](https://github.com/Jlapb-code/financial-companion-updates/releases).
 Нужен Android 8.0+. Файл называется `financial-companion.apk`.
