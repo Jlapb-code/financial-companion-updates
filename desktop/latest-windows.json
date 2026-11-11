@@ -1,0 +1,9 @@
+{
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "msiUrl": "https://github.com/Jlapb-code/financial-companion-updates/releases/download/windows-v1.0.0/financial-companion-windows-x64.msi",
+  "sha256": "59ca8423709cef02e239b45effcd51ad4a65518724ba6661ffca895be8a10962",
+  "size": 31272269,
+  "releaseNotes": "Версия для Windows: финансовый учёт, цели, планы, прогнозы, совместимые с Android шифрованные копии и эмулятор банковских оповещений.",
+  "signature": "4F9Y/udywfa/DW8zchU8twBGYl79i4zDBfTUh05TqeOHJnheyLgSeZHzD3OGDBjsSPeruTWZfep0GjXsqtJ0CA=="
+}
