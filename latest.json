@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "packageName": "ru.naparnik.finance",
-  "versionCode": 3,
-  "versionName": "1.0.2",
+  "versionCode": 4,
+  "versionName": "1.0.3",
   "minSdk": 26,
-  "apkUrl": "https://github.com/Jlapb-code/financial-companion-updates/releases/download/v1.0.2/financial-companion.apk",
-  "sha256": "3e13c47f57e10615da8f465cc192656deda707d478adc90db04075da58e6ffe6",
-  "size": 16035081,
+  "apkUrl": "https://github.com/Jlapb-code/financial-companion-updates/releases/download/v1.0.3/financial-companion.apk",
+  "sha256": "42898fb1f0ec69275a9c2f1271c5d37bf72dcfea6805b1b51af948d53a306906",
+  "size": 16035161,
   "certificateSha256": "4bf3069d6e66f89f9d557040bc677c538afd0b4ec3f57cea2aa949c7501336e7",
-  "releaseNotes": "Рабочая версия 1.0.2: офлайн-финансы, бюджеты, цели и прогнозы, шифрованные копии. Исправлена совместимость проверки подписей обновлений со старыми Android. Пройдены 40 тестов финансового ядра и 7 Android-проверок, включая скачивание подписанного обновления."
+  "releaseNotes": "Финансовый напарник 1.0.3: офлайн-учёт, цели, прогнозы и шифрованная база. Проверены 40 сценариев ядра и 8 Android-проверок. Исправлена передача APK системному установщику на старых Android; обновление устанавливается поверх приложения с сохранением данных."
 }
