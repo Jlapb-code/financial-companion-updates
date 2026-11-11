@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "packageName": "ru.naparnik.finance",
+  "versionCode": 2,
+  "versionName": "1.0.1",
+  "minSdk": 26,
+  "apkUrl": "https://github.com/Jlapb-code/financial-companion-updates/releases/download/v1.0.1/financial-companion.apk",
+  "sha256": "abad97d6df138732112d72473b440366a527dcb8a38ce486e483a5255983e74d",
+  "size": 16035081,
+  "certificateSha256": "4bf3069d6e66f89f9d557040bc677c538afd0b4ec3f57cea2aa949c7501336e7",
+  "releaseNotes": "Первая рабочая версия Финансового напарника: офлайн-учёт, бюджеты, платежи, календарь людей и событий, цели, прогнозы и сценарии. Шифрованная база и копии. Пройдены 40 тестов ядра и 6 проверок на Android. Округление сумм вниз до целых рублей."
+}

@@ -34,6 +34,7 @@ jobs:
           digest=re.search(r'certificate SHA-256 digest: ([a-f0-9]+)',cert)[1]
           assert digest==(root/'signing-certificate.sha256').read_text().strip()==j['certificateSha256']
           b=subprocess.check_output([str(tools/'aapt'),'dump','badging',str(apk)],text=True)
+          assert 'application-debuggable' not in b,'Debug APKs are not release updates'
           package=re.search(r"package: name='([^']+)' versionCode='(\d+)' versionName='([^']+)'",b)
           assert package[1]==j['packageName']=='ru.naparnik.finance'
           assert int(package[2])==j['versionCode'] and package[3]==j['versionName']
